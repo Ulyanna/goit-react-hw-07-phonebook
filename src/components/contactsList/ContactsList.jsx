@@ -9,11 +9,11 @@ import { ListItem, Name, Number, DeleteButton } from './ContactsList.styled';
 
 const ContactItem = ({ contact }) => {
   const dispatch = useDispatch();
-  const { name, id, phone } = contact;
+  const { name, id, number } = contact;
   return (
     <ListItem>
       <Name>{name}</Name>
-      <Number>{phone}</Number>
+      <Number>{number}</Number>
 
       <DeleteButton type="button" onClick={() => dispatch(deleteContact(id))}>
         Delete
