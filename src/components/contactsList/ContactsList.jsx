@@ -2,17 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { deleteContact } from "../../redux/operations"
-import {getContact,getFilterWord} from "../../redux/selector"
+import { deleteContact } from '../../redux/operations';
+import { getContact } from '../../redux/selector';
+import { getFilter } from '../../redux/selector';
 import { ListItem, Name, Number, DeleteButton } from './ContactsList.styled';
 
-const ContactItem = ({ contact}) => {
-  	const dispatch = useDispatch();
-  const { name, number, id } = contact;
+const ContactItem = ({ contact }) => {
+  const dispatch = useDispatch();
+  const { name, id, phone } = contact;
   return (
     <ListItem>
       <Name>{name}</Name>
-      <Number>{number}</Number>
+      <Number>{phone}</Number>
 
       <DeleteButton type="button" onClick={() => dispatch(deleteContact(id))}>
         Delete
@@ -21,31 +22,29 @@ const ContactItem = ({ contact}) => {
   );
 };
 export const ContactsList = () => {
-  	const contacts = useSelector(getContact);
-  const filterWord = useSelector(getFilterWord);
-  
-	const isVisibleContacts = () => {
-		if (filterWord) {
-			const normalizeFilter = filterWord.toLowerCase();
+  const contacts = useSelector(getContact);
+  const filterName = useSelector(getFilter);
 
-			if (contacts.length !== 0) {
-				return contacts.filter(contact =>
-					contact.name.toLowerCase().includes(normalizeFilter)
-				);
-			}
-		}
-		return contacts;
-	};
-const visibleContacts = isVisibleContacts()
+  const isVisibleContacts = () => {
+    if (!filterName) {
+      return contacts;
+    }
+    const normalaizedFilter = filterName.toLowerCase();
+
+    return contacts.filter(({ name }) => {
+      const normalaizedName = name.toLowerCase();
+      const result = normalaizedName.includes(normalaizedFilter);
+      return result;
+    });
+  };
+  const visibleContacts = isVisibleContacts();
+  console.log(visibleContacts);
   return (
     <ul>
-      
-      {visibleContacts && visibleContacts.map(contact => (
-        <ContactItem
-          contact={contact}
-          key={contact.id}
-        />
-      ))}
+      {visibleContacts &&
+        visibleContacts.map(contact => (
+          <ContactItem contact={contact} key={contact.id} />
+        ))}
     </ul>
   );
 };
