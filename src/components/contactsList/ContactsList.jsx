@@ -38,7 +38,7 @@ export const ContactsList = () => {
     });
   };
   const visibleContacts = isVisibleContacts();
-  console.log(visibleContacts);
+
   return (
     <ul>
       {visibleContacts &&
